@@ -1,0 +1,6 @@
+Aide au Dev : 
+
+- Coolors permet de générer une palette de couleurs aléatoire : https://coolors.co/
+
+- remove Bg permet d'enlever le font d'une image : https://www.remove.bg/fr
+

@@ -1,0 +1,6 @@
+- Font Awesome permet d'aller chercher des icones : https://fontawesome.com/
+    fonctionne obligatoirement avec : https://cdnjs.com/libraries/font-awesome
+
+- Google Fonts pour les Font Family : https://fonts.google.com/
+
+- Kitilib repertorie pleins d'aides : https://www.kitilib.com/
