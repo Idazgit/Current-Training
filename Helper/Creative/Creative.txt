@@ -4,3 +4,11 @@ Aide au Dev :
 
 - remove Bg permet d'enlever le font d'une image : https://www.remove.bg/fr
 
+- CSS Gradient : Générateur de dégradés CSS : https://cssgradient.io/
+Pour l'inspiration :
+
+- Awwwards : Galerie des meilleurs sites web : https://www.awwwards.com/
+
+- Dribbble : Plateforme de partage de designs : https://dribbble.com/
+
+- Behance : Portfolio de créatifs professionnels : https://www.behance.net/

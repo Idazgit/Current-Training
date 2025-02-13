@@ -2,7 +2,7 @@
 // 3 essaie pour deviner le nombre
 // isRight(n)
 //crée une fonction guess()
-
+/*
 function randomNumber() {
   return Math.floor(Math.random() * 11);
 }
@@ -24,4 +24,19 @@ for (let i = 0; i < 3; i++) {
   } else if (i === 2) {
     console.log("Vous avez perdu");
   }
+}*/
+// fonction pour les nombres premier
+function isPremier(n) {
+  for (let i = n - 1; i > 1; i--) {
+    if (n % i === 0) {
+      return false;
+    }
+  }
+  return true;
 }
+console.log(isPremier(0));
+console.log(isPremier(1));
+console.log(isPremier(2));
+console.log(isPremier(3));
+console.log(isPremier(11));
+console.log(isPremier(12));

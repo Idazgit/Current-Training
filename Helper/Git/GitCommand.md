@@ -54,6 +54,6 @@ git stash drop # Supprimer le dernier stash
 
 # Tags (étiquettes)
 
-git tag <nom> # Créer un tag léger
+git tag <nom> # Créer un tag lége
 git tag -a <nom> -m "message" # Créer un tag annoté
 git push origin --tags # Pousser tous les tags
