@@ -27,6 +27,9 @@ for (let i = 0; i < 3; i++) {
 }*/
 // fonction pour les nombres premier
 function isPremier(n) {
+  if (n < 2) {
+    return false;
+  }
   for (let i = n - 1; i > 1; i--) {
     if (n % i === 0) {
       return false;
