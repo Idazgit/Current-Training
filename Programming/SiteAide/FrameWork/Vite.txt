@@ -1,3 +1,8 @@
 site de vite :https://vite.dev/ 
 
 installation de vite : https://vite.dev/guide/
+
+
+grafikart vite : https://grafikart.fr/tutoriels/javascript-vite-1351
+
+autre vidéo : https://www.youtube.com/watch?v=qabYnswX3FY&t=90s
