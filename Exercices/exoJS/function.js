@@ -43,3 +43,5 @@ console.log(isPremier(2));
 console.log(isPremier(3));
 console.log(isPremier(11));
 console.log(isPremier(12));
+
+//Exercice plus complexe sur les fonctions
