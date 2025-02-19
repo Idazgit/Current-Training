@@ -1,5 +1,19 @@
 const http = require("http");
-const fs = require("fs").promises;
+const fs = require("fs/promises");
+const path = require("path");
+const logFilePath = path.join(__dirname, "logs.txt");
+
+// Fonction pour écrire les logs dans le fichier
+const logAction = async (action, userId, details) => {
+  const logEntry = `${new Date().toLocaleString()} - ${action} - ID:${userId} - ${JSON.stringify(
+    details
+  )}\n`; // Utilisation de JSON.stringify pour convertir l'objet
+  try {
+    await fs.appendFile(logFilePath, logEntry); // Utilisation de fs.promises.appendFile pour les actions asynchrones
+  } catch (err) {
+    console.log("Erreur lors de l'écriture dans logs", err);
+  }
+};
 
 // Lecture du fichier JSON
 async function readArticles() {
@@ -71,17 +85,31 @@ const server = http.createServer(async (req, res) => {
       try {
         const article = JSON.parse(body);
         const articles = await readArticles();
-        article.id = articles.length + 1; // ID unique basé sur le timestamp
+        article.id = articles.length + 1; // ID unique basé sur le nombre d'articles
         articles.push(article);
         await writeArticles(articles);
+
+        // Envoyer la réponse au client avant d'exécuter logAction
         res.writeHead(201, { "Content-Type": "application/json" });
         res.end(JSON.stringify(article));
+
+        // Exécuter logAction après la réponse
+        try {
+          await logAction("AJOUT", article.id, article);
+        } catch (logError) {
+          console.error(
+            "Erreur lors de l'écriture dans le fichier de log :",
+            logError
+          );
+        }
       } catch (error) {
-        res.writeHead(400);
+        // Gérer les erreurs de traitement de l'article
+        res.writeHead(400, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Invalid data" }));
       }
     });
   }
+
   // Route pour mettre à jour un article
   else if (req.url.match(/^\/articles\/\d+$/) && req.method === "PUT") {
     const id = req.url.split("/")[2];
@@ -105,6 +133,7 @@ const server = http.createServer(async (req, res) => {
           await writeArticles(articles);
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify(articles[articleIndex]));
+          await logAction("MODIFICATION", id, articles[articleIndex]);
         }
       } catch (error) {
         res.writeHead(400, { "Content-Type": "application/json" });
@@ -126,6 +155,8 @@ const server = http.createServer(async (req, res) => {
       await writeArticles(updatedArticles);
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ message: "Article deleted" }));
+      const deletedArticle = articles.find((article) => article.id == id);
+      await logAction("SUPPRESSION", id, deletedArticle);
     }
   }
   // Gestion des autres routes non définies
