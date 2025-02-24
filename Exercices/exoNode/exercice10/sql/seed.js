@@ -20,15 +20,19 @@ async function seedDatabase() {
   try {
     const db = await openDb();
 
-    // Supprime les données existantes
+    // Supprimer les données existantes
     await db.run("DELETE FROM articles");
 
-    // Insère les données de test
+    // Insérer les données de test avec la version
     for (const article of sampleArticles) {
-      await db.run("INSERT INTO articles (title, content) VALUES (?, ?)", [
-        article.title,
-        article.content,
-      ]);
+      await db.run(
+        "INSERT INTO articles (title, content, version) VALUES (?, ?, ?)",
+        [
+          article.title,
+          article.content,
+          1, // Vous pouvez définir la version à 1 ici.
+        ]
+      );
     }
 
     console.log("Database seeded successfully");

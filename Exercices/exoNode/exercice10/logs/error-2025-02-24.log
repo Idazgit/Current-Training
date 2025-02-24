@@ -1,0 +1,90 @@
+2025-02-24T08:25:50.515Z - ERROR: undefined
+undefined
+2025-02-24T08:37:05.527Z - ERROR: SQLITE_CONSTRAINT: NOT NULL constraint failed: articles.title
+Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: articles.title
+2025-02-24T10:33:33.423Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/routes/articles.js:69:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/server.js:21:28)
+2025-02-24T10:34:31.664Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/routes/articles.js:69:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/server.js:21:28)
+2025-02-24T10:42:27.164Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/routes/articles.js:69:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/server.js:21:28)
+2025-02-24T10:43:25.580Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/routes/articles.js:69:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/server.js:21:28)
+2025-02-24T10:43:40.406Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/routes/articles.js:69:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/server.js:21:28)
+2025-02-24T10:44:20.292Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/routes/articles.js:69:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/server.js:21:28)
+2025-02-24T10:47:22.740Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/routes/articles.js:71:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/server.js:21:28)
+2025-02-24T12:11:21.790Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/routes/articles.js:74:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/server.js:21:28)
+2025-02-24T12:47:55.050Z - ERROR: SQLITE_ERROR: table articles has no column named version
+Error: SQLITE_ERROR: table articles has no column named version
+2025-02-24T13:38:38.057Z - ERROR: version is not defined
+ReferenceError: version is not defined
+    at seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:33:52)
+2025-02-24T13:39:01.676Z - ERROR: version is not defined
+ReferenceError: version is not defined
+    at seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:33:52)
+2025-02-24T13:39:23.144Z - ERROR: SQLITE_ERROR: near "1": syntax error
+Error: SQLITE_ERROR: near "1": syntax error
+2025-02-24T13:40:36.510Z - ERROR: SQLITE_ERROR: near "version": syntax error
+Error: SQLITE_ERROR: near "version": syntax error
+2025-02-24T13:40:36.518Z - ERROR: Failed to initialize database: ./database2.db
+Error: Failed to initialize database: ./database2.db
+    at initDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:61:11)
+    at async openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:19:5)
+    at async seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:24:16)
+2025-02-24T13:40:36.520Z - ERROR: Failed to open database: ./database2.db
+Error: Failed to open database: ./database2.db
+    at openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:24:11)
+    at async seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:24:16)
+2025-02-24T13:42:18.320Z - ERROR: SQLITE_ERROR: near "version": syntax error
+Error: SQLITE_ERROR: near "version": syntax error
+2025-02-24T13:42:18.327Z - ERROR: Failed to initialize database: ./database2.db
+Error: Failed to initialize database: ./database2.db
+    at initDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:61:11)
+    at async openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:19:5)
+    at async seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:24:16)
+2025-02-24T13:42:18.329Z - ERROR: Failed to open database: ./database2.db
+Error: Failed to open database: ./database2.db
+    at openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:24:11)
+    at async seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:24:16)
+2025-02-24T13:43:41.070Z - ERROR: SQLITE_ERROR: near "version": syntax error
+Error: SQLITE_ERROR: near "version": syntax error
+2025-02-24T13:43:41.077Z - ERROR: Failed to initialize database: ./database2.db
+Error: Failed to initialize database: ./database2.db
+    at initDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:70:11)
+    at async openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:19:5)
+    at async seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:24:16)
+2025-02-24T13:43:41.080Z - ERROR: Failed to open database: ./database2.db
+Error: Failed to open database: ./database2.db
+    at openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:24:11)
+    at async seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:24:16)
+2025-02-24T13:45:28.202Z - ERROR: SQLITE_ERROR: near "version": syntax error
+Error: SQLITE_ERROR: near "version": syntax error
+2025-02-24T13:45:28.210Z - ERROR: Failed to initialize database: ./database2.db
+Error: Failed to initialize database: ./database2.db
+    at initDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:70:11)
+    at async openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:19:5)
+    at async seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:24:16)
+2025-02-24T13:45:28.212Z - ERROR: Failed to open database: ./database2.db
+Error: Failed to open database: ./database2.db
+    at openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/utils/db.js:24:11)
+    at async seedUsers (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice10/sql/seedUsers.js:24:16)
