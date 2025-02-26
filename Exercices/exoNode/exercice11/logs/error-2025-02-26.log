@@ -1,0 +1,24 @@
+2025-02-26T10:42:13.840Z - ERROR: SQLITE_ERROR: incomplete input
+Error: SQLITE_ERROR: incomplete input
+2025-02-26T10:42:13.844Z - ERROR: Failed to initialize database: ./database.db
+Error: Failed to initialize database: ./database.db
+    at initDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/utils/db.js:59:11)
+    at async openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/utils/db.js:19:5)
+    at async getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/routes/articles.js:12:16)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/server.js:21:28)
+2025-02-26T10:42:13.854Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/routes/articles.js:84:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/server.js:21:28)
+2025-02-26T10:42:14.153Z - ERROR: SQLITE_ERROR: incomplete input
+Error: SQLITE_ERROR: incomplete input
+2025-02-26T10:42:14.155Z - ERROR: Failed to initialize database: ./database.db
+Error: Failed to initialize database: ./database.db
+    at initDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/utils/db.js:59:11)
+    at async openDb (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/utils/db.js:19:5)
+    at async getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/routes/articles.js:12:16)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/server.js:21:28)
+2025-02-26T10:42:14.160Z - ERROR: Failed to fetch all articles
+Error: Failed to fetch all articles
+    at getAllArticles (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/routes/articles.js:84:11)
+    at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/server.js:21:28)
