@@ -95,7 +95,16 @@ const requestListener = async (req, res) => {
 // Créer le serveur HTTP
 const server = http.createServer(requestListener);
 
-// Lancer le serveur
-server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+(async () => {
+  try {
+    await openDb(); // Ouvre la base et initialise les tables
+    console.log("Base de données initialisée !");
+
+    // Démarrer le serveur une fois la base prête
+    server.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'initialisation de la base :", error);
+  }
+})();
