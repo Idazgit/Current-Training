@@ -1,4 +1,26 @@
+exo 1.1
+    SELECT * FROM produits
+   ...> WHERE stock < 100;
 
+exo 1.2 
+    sqlite> SELECT nom, stock 
+    FROM produits 
+    WHERE stock < 10;
+
+exo 1.3
+    SELECT nom, prix FROM produits WHERE categorie_id= 1;
+
+exo 2.1 
+    SELECT nom,prix FROM produits ORDER BY prix DESC; 
+
+exo 2.2 
+    SELECT nom,stock FROM produits WHERE stock > 20;
+
+exo 3.1
+    SELECT c.nom, SUM(p.stock) AS stock_total FROM produits p JOIN categories c ON p.categorie_id = c.id GROUP BY c.nom ORDER BY stock_total ASC;
+
+exo 3.2 
+    SELECT c.nom, ROUND(AVG(p.prix),2) AS prix_moyen FROM produits p JOIN categories c ON p.categorie_id = c.id GROUP BY c.nom ORDER BY prix_moyen DESC; 
 exo 4.1
 sqlite> SELECT co.id AS commande_id,
     cl.nom AS client,
