@@ -1,0 +1,10 @@
+2025-02-28T10:01:13.902Z - ERROR: SQLITE_ERROR: table users has no column named version
+Error: SQLITE_ERROR: table users has no column named version
+2025-02-28T10:24:06.629Z - ERROR: Cannot read properties of undefined (reading 'split')
+TypeError: Cannot read properties of undefined (reading 'split')
+    at IncomingMessage.<anonymous> (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/routes/users.js:93:37)
+2025-02-28T10:30:03.963Z - ERROR: updatedArticle is not defined
+ReferenceError: updatedArticle is not defined
+    at IncomingMessage.<anonymous> (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/routes/users.js:110:23)
+2025-02-28T10:31:33.248Z - ERROR: SQLITE_ERROR: cannot commit - no transaction is active
+Error: SQLITE_ERROR: cannot commit - no transaction is active

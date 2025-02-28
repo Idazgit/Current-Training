@@ -9,6 +9,12 @@ import {
   updateArticle,
   deleteArticle,
 } from "./routes/articles.js";
+import {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+} from "./routes/users.js";
 
 const PORT = 4000;
 
@@ -29,6 +35,19 @@ const requestListener = async (req, res) => {
     }
     return;
   }
+  if (parsedUrl.pathname === "/user" && req.method === "GET") {
+    try {
+      const usersData = await getAllUsers(req);
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(usersData));
+    } catch (error) {
+      await logError(error);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Failed to fetch users" }));
+    }
+    return;
+  }
 
   // Route pour créer un nouvel article
   if (parsedUrl.pathname === "/article" && req.method === "POST") {
@@ -41,11 +60,20 @@ const requestListener = async (req, res) => {
     }
     return;
   }
-
+  if (parsedUrl.pathname === "/user" && req.method === "POST") {
+    try {
+      await createUser(req, res);
+    } catch (error) {
+      await logError(error);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Failed to create user" }));
+    }
+    return;
+  }
   // Route pour récupérer ou modifier un article spécifique par ID
-  const match = parsedUrl.pathname.match(/^\/article\/(\d+)$/);
-  if (match) {
-    const articleId = parseInt(match[1], 10);
+  const matchArticle = parsedUrl.pathname.match(/^\/article\/(\d+)$/);
+  if (matchArticle) {
+    const articleId = parseInt(matchArticle[1], 10);
 
     if (req.method === "GET") {
       try {
@@ -76,7 +104,7 @@ const requestListener = async (req, res) => {
       return;
     }
   }
-  if (match && req.method === "DELETE") {
+  if (matchArticle && req.method === "DELETE") {
     try {
       await deleteArticle(req, res);
     } catch (error) {
@@ -87,6 +115,37 @@ const requestListener = async (req, res) => {
     return;
   }
 
+  const matchUser = parsedUrl.pathname.match(/^\/user\/(\d+)$/);
+  if (matchUser) {
+    const userId = parseInt(matchUser[1], 10);
+    if (req.method === "GET") {
+      try {
+        const user = await getUserById(userId);
+        if (user) {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify(user));
+        } else {
+          res.writeHead(404, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "ID inexistant" }));
+        }
+      } catch (error) {
+        await logError(error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Failed to fetch user" }));
+      }
+      return;
+    }
+    if (req.method === "PUT") {
+      try {
+        await updateUser(req, res);
+      } catch (error) {
+        await logError(error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Failed to update User" }));
+      }
+      return;
+    }
+  }
   // Retourne une erreur 404 pour toute autre route
   res.writeHead(404, { "Content-Type": "text/plain" });
   res.end("404 Not Found");
