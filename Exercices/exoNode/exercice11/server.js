@@ -14,6 +14,8 @@ import {
   getUserById,
   createUser,
   updateUser,
+  deleteUser,
+  getArticleByUser,
 } from "./routes/users.js";
 
 const PORT = 4000;
@@ -47,6 +49,30 @@ const requestListener = async (req, res) => {
       res.end(JSON.stringify({ error: "Failed to fetch users" }));
     }
     return;
+  }
+  const matchArticleByUser = parsedUrl.pathname.match(
+    /^\/user\/(\d+)\/article$/
+  );
+  if (matchArticleByUser) {
+    const articleByUser = parseInt(matchArticleByUser[1], 10);
+
+    if (req.method === "GET") {
+      try {
+        const articlesUser = await getArticleByUser(articleByUser);
+        if (articlesUser) {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify(articlesUser));
+        } else {
+          res.writeHead(404, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "ID inexistant" }));
+        }
+      } catch (error) {
+        await logError(error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Failed to fetch article" }));
+      }
+      return;
+    }
   }
 
   // Route pour créer un nouvel article
@@ -142,6 +168,16 @@ const requestListener = async (req, res) => {
         await logError(error);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Failed to update User" }));
+      }
+      return;
+    }
+    if (matchUser && req.method === "DELETE") {
+      try {
+        await deleteUser(req, res);
+      } catch (error) {
+        await logError(error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Erreur lors de la suppression" }));
       }
       return;
     }

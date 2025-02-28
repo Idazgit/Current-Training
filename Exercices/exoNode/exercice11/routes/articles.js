@@ -119,23 +119,33 @@ export async function createArticle(req, res) {
     try {
       const newArticle = JSON.parse(body);
 
-      // Vérifie si `title` et `content` sont bien présents
-      if (!("title" in newArticle) || !("content" in newArticle)) {
+      // Vérifie si `title` et `content` et `user_id` sont bien présents
+      if (
+        !("title" in newArticle) ||
+        !("content" in newArticle) ||
+        !("user_id" in newArticle)
+      ) {
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(
           JSON.stringify({
-            error: "Erreur développeur : 'title' et 'content' sont requis",
+            error:
+              "Erreur développeur : 'title','content' et 'user_id' sont requis",
           })
         );
         return;
       }
 
-      // Vérifie que `title` et `content` ne sont pas vides
-      if (!newArticle.title.trim() || !newArticle.content.trim()) {
+      // Vérifie que `title` et `content` et `user_id` ne sont pas vides
+      if (
+        !newArticle.title.trim() ||
+        !newArticle.content.trim() ||
+        !newArticle.user_id == null
+      ) {
         res.writeHead(206, { "Content-Type": "application/json" });
         res.end(
           JSON.stringify({
-            message: "Le titre et le contenu ne peuvent pas être vides",
+            message:
+              "Le titre ,le contenu et le user id ne peuvent pas être vides",
             type: "validation_error",
           })
         );
@@ -146,14 +156,15 @@ export async function createArticle(req, res) {
 
       // ✅ Insertion de `title` et `content`
       const result = await db.run(
-        "INSERT INTO articles (title, content , version) VALUES (?, ?, ?)",
-        [newArticle.title, newArticle.content, 1]
+        "INSERT INTO articles (title, content, user_id ) VALUES (?, ?,?)",
+        [newArticle.title, newArticle.content, newArticle.user_id]
       );
 
       const createdArticle = {
         id: result.lastID,
         title: newArticle.title,
         content: newArticle.content,
+        user_id: newArticle.user_id,
       };
 
       res.writeHead(201, { "Content-Type": "application/json" });
@@ -185,7 +196,7 @@ export async function updateArticle(req, res) {
     const db = await openDb();
 
     // Démarre une transaction
-    const transaction = await db.prepare("BEGIN TRANSACTION");
+    await db.run("BEGIN TRANSACTION");
 
     try {
       const urlParts = req.url.split("/");
@@ -210,7 +221,11 @@ export async function updateArticle(req, res) {
       const updatedArticle = JSON.parse(body);
 
       // Vérification des champs
-      if (!("title" in updatedArticle) || !("content" in updatedArticle)) {
+      if (
+        !("title" in updatedArticle) ||
+        !("content" in updatedArticle) ||
+        !("user_id" in updatedArticle)
+      ) {
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(
           JSON.stringify({ error: "Le titre et le contenu sont requis" })
@@ -218,7 +233,11 @@ export async function updateArticle(req, res) {
         return;
       }
 
-      if (!updatedArticle.title.trim() || !updatedArticle.content.trim()) {
+      if (
+        !updatedArticle.title.trim() ||
+        !updatedArticle.content.trim() ||
+        !updatedArticle.user_id == null
+      ) {
         res.writeHead(206, { "Content-Type": "application/json" });
         res.end(
           JSON.stringify({
@@ -242,8 +261,13 @@ export async function updateArticle(req, res) {
 
       // Mise à jour de l'article
       await db.run(
-        "UPDATE articles SET title = ?, content = ?, version = version + 1 WHERE id = ?",
-        [updatedArticle.title, updatedArticle.content, id]
+        "UPDATE articles SET title = ?, content = ?, user_id = ? WHERE id = ?",
+        [
+          updatedArticle.title,
+          updatedArticle.content,
+          updatedArticle.user_id,
+          id,
+        ]
       );
 
       // Commit de la transaction

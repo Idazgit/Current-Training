@@ -28,6 +28,21 @@ export async function getUserById(id) {
   }
 }
 
+export async function getArticleByUser(id) {
+  try {
+    const db = await openDb();
+    const userName = await db.get("SELECT name FROM users WHERE id = ?", [id]);
+    const article = await db.all("SELECT * FROM articles WHERE user_id = ? ", [
+      id,
+    ]);
+    const articleUser = { userName, article };
+    return articleUser || null;
+  } catch (error) {
+    await logError(error);
+    throw new Error("Failed to fetch articles by userId");
+  }
+}
+
 export async function createUser(req, res) {
   let body = "";
   req.on("data", (chunk) => {
@@ -88,7 +103,7 @@ export async function updateUser(req, res) {
   req.on("end", async () => {
     const db = await openDb();
 
-    const transaction = await db.prepare("BEGIN TRANSACTION");
+    await db.run("BEGIN TRANSACTION");
     try {
       const urlParts = req.url.split("/");
       const id = parseInt(urlParts[urlParts.length - 1], 10);
@@ -121,8 +136,8 @@ export async function updateUser(req, res) {
         );
         return;
       }
-      // Mise à jour de l'article
-      await db.run("UPDATE articles SET title = ?, content = ? WHERE id = ?", [
+      // Mise à jour de l'user
+      await db.run("UPDATE users SET name = ?, email = ? WHERE id = ?", [
         updatedUser.name,
         updatedUser.email,
         id,
@@ -135,9 +150,46 @@ export async function updateUser(req, res) {
       // Log de la mise à jour
       await logRequest(req, "PUT", `/users/${id}`);
     } catch (error) {
+      await db.run("ROLLBACK");
       await logError(error, req);
       res.writeHead(500, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Erreur interne du serveur" }));
+    } finally {
+      await db.close(); // Fermeture propre de la base de données
     }
   });
+}
+export async function deleteUser(req, res) {
+  const id = req.url.split("/").pop(); // Récupère l'ID de l'URL
+
+  if (isNaN(id)) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "ID invalide" }));
+    return;
+  }
+
+  try {
+    const db = await openDb();
+
+    // Vérifie si l'user existe avant de le supprimer
+    const existingUser = await db.get("SELECT * FROM users WHERE id = ?", [id]);
+    if (!existingUser) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "l'User n'existe pas" }));
+      return;
+    }
+
+    // Suppression de l'user
+    await db.run("DELETE FROM users WHERE id = ?", [id]);
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ message: "Article supprimé avec succès" }));
+
+    // ✅ Ajout d'un log après suppression
+    await logRequest(req, "DELETE", `/users/${id}`);
+  } catch (error) {
+    await logError(error, req);
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Erreur lors de la suppression" }));
+  }
 }
