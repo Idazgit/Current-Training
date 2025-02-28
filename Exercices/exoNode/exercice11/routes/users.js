@@ -181,9 +181,11 @@ export async function deleteUser(req, res) {
 
     // Suppression de l'user
     await db.run("DELETE FROM users WHERE id = ?", [id]);
-
+    await db.run("DELETE FROM articles WHERE user_id = ?", [id]);
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ message: "Article supprimé avec succès" }));
+    res.end(
+      JSON.stringify({ message: "User supprimé et ses Articles avec succès" })
+    );
 
     // ✅ Ajout d'un log après suppression
     await logRequest(req, "DELETE", `/users/${id}`);

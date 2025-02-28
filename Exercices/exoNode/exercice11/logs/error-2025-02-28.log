@@ -62,3 +62,5 @@ Error: SQLITE_ERROR: no such column: user_id
 Error: Failed to fetch articles by userId
     at getArticleByUser (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/routes/users.js:42:11)
     at async Server.requestListener (file:///C:/Users/DWWM/Desktop/Current%20Training/Exercices/exoNode/exercice11/server.js:61:30)
+2025-02-28T15:06:41.029Z - ERROR: SQLITE_ERROR: near "*": syntax error
+Error: SQLITE_ERROR: near "*": syntax error
