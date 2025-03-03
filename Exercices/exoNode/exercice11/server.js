@@ -17,6 +17,11 @@ import {
   deleteUser,
   getArticleByUser,
 } from "./routes/users.js";
+import { errorHandler } from "./utils/errors/errorHandler.js";
+import { NotFoundError } from "./utils/errors/NotFoundError.js";
+import { ValidationError } from "./utils/errors/ValidationError.js";
+import { ConflictError } from "./utils/errors/conflictError.js";
+import { PartialContentError } from "./utils/errors/PartialContentError.js";
 
 const PORT = 4000;
 
@@ -32,24 +37,24 @@ const requestListener = async (req, res) => {
       res.end(JSON.stringify(articlesData)); // Renvoie les articles filtrés et paginés
     } catch (error) {
       await logError(error);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Failed to fetch articles" }));
+      errorHandler(res, new Error("Failed to fetch articles"));
     }
     return;
   }
   if (parsedUrl.pathname === "/user" && req.method === "GET") {
     try {
-      const usersData = await getAllUsers(req);
-
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(usersData));
+      await getAllUsers(req, res); // ✅ Laisse `getAllUsers` gérer la réponse !
     } catch (error) {
       await logError(error);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Failed to fetch users" }));
+
+      if (!res.writableEnded) {
+        // ✅ Vérification avant d'envoyer une erreur
+        errorHandler(res, new Error("Failed to fetch users"));
+      }
+      return;
     }
-    return;
   }
+
   const matchArticleByUser = parsedUrl.pathname.match(
     /^\/user\/(\d+)\/article$/
   );
@@ -63,13 +68,11 @@ const requestListener = async (req, res) => {
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify(articlesUser));
         } else {
-          res.writeHead(404, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ error: "ID inexistant" }));
+          errorHandler(res, new NotFoundError("ID inexistant"));
         }
       } catch (error) {
         await logError(error);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Failed to fetch article" }));
+        errorHandler(res, new Error("Failed to fetch articles"));
       }
       return;
     }
@@ -81,8 +84,7 @@ const requestListener = async (req, res) => {
       await createArticle(req, res);
     } catch (error) {
       await logError(error);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Failed to create article" }));
+      errorHandler(res, new Error("Failed to create articles"));
     }
     return;
   }
@@ -91,8 +93,7 @@ const requestListener = async (req, res) => {
       await createUser(req, res);
     } catch (error) {
       await logError(error);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Failed to create user" }));
+      errorHandler(res, new Error("Failed to create user"));
     }
     return;
   }
@@ -108,13 +109,11 @@ const requestListener = async (req, res) => {
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify(article));
         } else {
-          res.writeHead(404, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ error: "ID inexistant" }));
+          errorHandler(res, new NotFoundError("ID inexistant"));
         }
       } catch (error) {
         await logError(error);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Failed to fetch article" }));
+        errorHandler(res, new Error("Failed to fetch article"));
       }
       return;
     }
@@ -124,8 +123,7 @@ const requestListener = async (req, res) => {
         await updateArticle(req, res);
       } catch (error) {
         await logError(error);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Failed to update article" }));
+        errorHandler(res, new Error("Failed to update article"));
       }
       return;
     }
@@ -135,8 +133,7 @@ const requestListener = async (req, res) => {
       await deleteArticle(req, res);
     } catch (error) {
       await logError(error);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Erreur lors de la suppression" }));
+      errorHandler(res, new Error("Failed to delete article"));
     }
     return;
   }
@@ -144,30 +141,27 @@ const requestListener = async (req, res) => {
   const matchUser = parsedUrl.pathname.match(/^\/user\/(\d+)$/);
   if (matchUser) {
     const userId = parseInt(matchUser[1], 10);
+
+    if (isNaN(userId)) {
+      return errorHandler(res, new ValidationError("ID invalide"));
+    }
+
     if (req.method === "GET") {
       try {
-        const user = await getUserById(userId);
-        if (user) {
-          res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify(user));
-        } else {
-          res.writeHead(404, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ error: "ID inexistant" }));
-        }
+        await getUserById(req, res, userId); // ✅ S'assurer que `userId` est bien un nombre
       } catch (error) {
         await logError(error);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Failed to fetch user" }));
+        errorHandler(res, new Error("Failed to fetch user"));
       }
       return;
     }
+
     if (req.method === "PUT") {
       try {
         await updateUser(req, res);
       } catch (error) {
         await logError(error);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Failed to update User" }));
+        errorHandler(res, new Error("Failed to update user"));
       }
       return;
     }
@@ -176,15 +170,13 @@ const requestListener = async (req, res) => {
         await deleteUser(req, res);
       } catch (error) {
         await logError(error);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Erreur lors de la suppression" }));
+        errorHandler(res, new Error("Failed to delete user"));
       }
       return;
     }
   }
   // Retourne une erreur 404 pour toute autre route
-  res.writeHead(404, { "Content-Type": "text/plain" });
-  res.end("404 Not Found");
+  errorHandler(res, new NotFoundError("Page Introuvable"));
 };
 
 // Créer le serveur HTTP

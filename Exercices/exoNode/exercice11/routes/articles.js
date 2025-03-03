@@ -1,5 +1,10 @@
 import { openDb } from "../utils/db.js";
 import { logError, logRequest } from "../utils/logger.js";
+import { ValidationError } from "../utils/errors/ValidationError.js";
+import { NotFoundError } from "../utils/errors/NotFoundError.js";
+import { ConflictError } from "../utils/errors/conflictError.js";
+import { PartialContentError } from "../utils/errors/PartialContentError.js";
+import { errorHandler } from "../utils/errors/errorHandler.js";
 
 /**
  * Récupère tous les articles avec pagination et filtres (recherche et date).
@@ -125,14 +130,12 @@ export async function createArticle(req, res) {
         !("content" in newArticle) ||
         !("user_id" in newArticle)
       ) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            error:
-              "Erreur développeur : 'title','content' et 'user_id' sont requis",
-          })
+        return errorHandler(
+          res,
+          new ValidationError(
+            "Erreur développeur : 'title','content' et 'user_id' sont requis"
+          )
         );
-        return;
       }
 
       // Vérifie que `title` et `content` et `user_id` ne sont pas vides
@@ -141,15 +144,12 @@ export async function createArticle(req, res) {
         !newArticle.content.trim() ||
         !newArticle.user_id == null
       ) {
-        res.writeHead(206, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            message:
-              "Le titre ,le contenu et le user id ne peuvent pas être vides",
-            type: "validation_error",
-          })
+        return errorHandler(
+          res,
+          new PartialContentError(
+            "Le titre, le contenu et le user id ne peuvent pas être vides"
+          )
         );
-        return;
       }
 
       const db = await openDb();
@@ -174,8 +174,7 @@ export async function createArticle(req, res) {
       await logRequest(req, "POST", "/articles");
     } catch (error) {
       await logError(error, req);
-      res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Données invalides" }));
+      errorHandler(res, new ValidationError("Données invalides"));
     }
   });
 }
@@ -203,9 +202,8 @@ export async function updateArticle(req, res) {
       const id = parseInt(urlParts[urlParts.length - 1], 10);
 
       if (isNaN(id)) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "ID invalide" }));
-        return;
+        await db.run("ROLLBACK");
+        return errorHandler(res, new ValidationError("ID invalide"));
       }
 
       const existingArticle = await db.get(
@@ -213,9 +211,8 @@ export async function updateArticle(req, res) {
         [id]
       );
       if (!existingArticle) {
-        res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Article non trouvé" }));
-        return;
+        await db.run("ROLLBACK");
+        return errorHandler(res, new NotFoundError("Article non trouvé"));
       }
 
       const updatedArticle = JSON.parse(body);
@@ -226,11 +223,11 @@ export async function updateArticle(req, res) {
         !("content" in updatedArticle) ||
         !("user_id" in updatedArticle)
       ) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({ error: "Le titre et le contenu sont requis" })
+        await db.run("ROLLBACK");
+        return errorHandler(
+          res,
+          new ValidationError("Le titre et le contenu sont requis")
         );
-        return;
       }
 
       if (
@@ -238,25 +235,24 @@ export async function updateArticle(req, res) {
         !updatedArticle.content.trim() ||
         !updatedArticle.user_id == null
       ) {
-        res.writeHead(206, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            error: "Le titre et le contenu ne peuvent pas être vides",
-          })
+        await db.run("ROLLBACK");
+        return errorHandler(
+          res,
+          new PartialContentError(
+            "Le titre et le contenu ne peuvent pas être vides"
+          )
         );
-        return;
       }
 
       // Vérification de la version de l'article
       if (existingArticle.version !== updatedArticle.version) {
-        res.writeHead(409, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            error:
-              "Conflit de version. L'article a été modifié depuis votre dernière consultation.",
-          })
+        await db.run("ROLLBACK");
+        return errorHandler(
+          res,
+          new ConflictError(
+            "Conflit de version. L'article a été modifié depuis votre dernière consultation."
+          )
         );
-        return;
       }
 
       // Mise à jour de l'article
@@ -283,8 +279,7 @@ export async function updateArticle(req, res) {
       await db.run("ROLLBACK");
 
       await logError(error, req);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Erreur interne du serveur" }));
+      errorHandler(res, new Error("Erreur interne du serveur"));
     }
   });
 }
@@ -299,9 +294,7 @@ export async function deleteArticle(req, res) {
   const id = req.url.split("/").pop(); // Récupère l'ID de l'URL
 
   if (isNaN(id)) {
-    res.writeHead(400, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "ID invalide" }));
-    return;
+    return errorHandler(res, new ValidationError("ID invalide"));
   }
 
   try {
@@ -313,9 +306,7 @@ export async function deleteArticle(req, res) {
       [id]
     );
     if (!existingArticle) {
-      res.writeHead(404, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "L'article n'existe pas" }));
-      return;
+      return errorHandler(res, new NotFoundError("L'article n'existe pas"));
     }
 
     // Suppression de l'article
@@ -328,7 +319,6 @@ export async function deleteArticle(req, res) {
     await logRequest(req, "DELETE", `/articles/${id}`);
   } catch (error) {
     await logError(error, req);
-    res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Erreur lors de la suppression" }));
+    errorHandler(res, new Error("Erreur lors de la suppression"));
   }
 }
