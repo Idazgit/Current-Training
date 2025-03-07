@@ -1,6 +1,0 @@
-const nouvelleCategorie = {
-  nom: "Histoire",
-  description: "Livres historiques",
-  dateCreation: "2025-03-06",
-  popularite: "Faible",
-}; // insertion de nouvelleCategorie

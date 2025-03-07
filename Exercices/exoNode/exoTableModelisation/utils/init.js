@@ -1,0 +1,96 @@
+import sqlite3 from "sqlite3";
+import { open } from "sqlite";
+import path from "path";
+import { readFile } from "fs/promises";
+
+console.log(
+  "Chemin de la base de données :",
+  path.resolve("./Data/database.db")
+);
+
+export async function openDb() {
+  try {
+    const db = await open({
+      filename: "./Data/database.db",
+      driver: sqlite3.Database,
+    });
+    console.log("Base de données ouverte avec succès !");
+
+    // Lire et exécuter le script SQL pour créer les tables
+    const schema = await readFile(
+      path.resolve("./sql/sqlite-schema.sql"),
+      "utf-8"
+    );
+    await db.exec(schema);
+    console.log("Schéma de la base de données appliqué avec succès !");
+
+    await insertData(db);
+
+    return db;
+  } catch (error) {
+    console.error("Erreur lors de l'ouverture de la base de données", error);
+    throw new Error("Failed to open database");
+  }
+}
+
+export async function insertData(db) {
+  try {
+    await db.run(`
+      INSERT INTO AUTEUR (ID_Auteur, Nom, Prenom, Date_Naissance, Nationalite)
+      VALUES 
+        (1, 'Hemingway', 'Ernest', '1899-07-21', 'Américaine'),
+        (2, 'Orwell', 'George', '1903-06-25', 'Britannique'),
+        (3, 'Dumas', 'Alexandre', '1802-07-24', 'Française'),
+        (4, 'Shakespeare', 'William', '1564-04-23', 'Anglais'),
+        (5, 'Asimov', 'Isaac', '1920-01-02', 'Russe'),
+        (6, 'Tolkien', 'J.R.R.', '1892-01-03', 'Anglais');
+    `);
+
+    await db.run(`
+      INSERT INTO CATEGORIE (ID_Categorie, Nom, Description, Date_Creation, Popularite)
+      VALUES 
+        (1, 'Fiction', 'Livres de fiction', '2025-03-06', 'Haute'),
+        (2, 'Science', 'Livres scientifiques', '2025-03-06', 'Moyenne'),
+        (3, 'Histoire', 'Livres sur l''histoire', '2025-03-06', 'Faible'),
+        (4, 'Arts', 'Livres sur l''art', '2025-03-06', 'Haute'),
+        (5, 'Technologie', 'Livres sur les technologies', '2025-03-06', 'Moyenne');
+    `);
+
+    await db.run(`
+      INSERT INTO LIVRE (ID_Livre, Titre, ISBN, Nombre_Pages, Annee_Publication)
+      VALUES
+        (1, 'The Old Man and the Sea', '978-1234567890', 127, 1952),
+        (2, '1984', '978-0987654321', 328, 1949),
+        (3, 'Le Comte de Monte-Cristo', '978-0307465206', 1000, 1844),
+        (4, 'Les Trois Mousquetaires', '978-0192830360', 800, 1844),
+        (5, 'Hamlet', '978-0141013072', 200, 1609),
+        (6, 'Macbeth', '978-0141014161', 250, 1606),
+        (7, 'Fundamentals of Robotics', '978-0133061870', 500, 1985),
+        (8, 'The Intelligent Man''s Guide to Science', '978-0385003504', 350, 1960),
+        (9, 'The Hobbit', '978-0547928227', 310, 1937),
+        (10, 'The Lord of the Rings', '978-0544003415', 1200, 1954),
+        (11, 'Le Livre des merveilles', '978-2213225700', 300, 1620),
+        (12, 'Othello', '978-0451526938', 150, 1604);
+    `);
+
+    await db.run(`
+      INSERT INTO AUTEUR_LIVRE (ID_Auteur, ID_Livre)
+      VALUES
+        (3, 3),
+        (3, 4),
+        (4, 5),
+        (4, 6),
+        (5, 7),
+        (5, 8),
+        (6, 9),
+        (6, 10),
+        (3, 11),
+        (4, 12);
+    `);
+
+    console.log("Données insérées avec succès !");
+  } catch (error) {
+    console.error("Erreur lors de l'insertion des données : ", error);
+    throw new Error("Failed to insert data");
+  }
+}
