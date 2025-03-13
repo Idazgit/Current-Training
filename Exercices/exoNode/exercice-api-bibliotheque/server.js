@@ -1,7 +1,23 @@
-// server.js
 import http from "http";
 import { routes } from "./routes/routes.js";
 import { logger } from "./utils/logger.js";
+import { openDb } from "./config/database.js";
+import path from "path";
+
+const dbFilePath = path.resolve("./Data/database.db");
+console.log("Chemin de la base de données :", dbFilePath);
+
+// Initialiser la base de données
+openDb(dbFilePath)
+  .then(() => {
+    console.log("Base de données initialisée.");
+  })
+  .catch((error) => {
+    console.error(
+      "Erreur lors de l'initialisation de la base de données:",
+      error
+    );
+  });
 
 const PORT = process.env.PORT || 3000;
 
@@ -22,7 +38,7 @@ const server = http.createServer((req, res) => {
   }
 
   // Log incoming request
-  //ajouter le logger ici
+  logger.info(`Incoming request: ${req.method} ${req.url}`);
 
   // Route the request
   routes(req, res);

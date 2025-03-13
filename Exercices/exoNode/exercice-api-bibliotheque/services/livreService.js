@@ -1,6 +1,6 @@
 // services/livreService.js
 import { livreRepository } from "../repositories/livreRepository.js";
-import { Livre } from "../models/Livre.js";
+import { Livre } from "../models/LivreModel.js";
 
 export const livreService = {
   getAllLivres() {

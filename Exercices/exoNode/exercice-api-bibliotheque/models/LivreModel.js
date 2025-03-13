@@ -1,11 +1,11 @@
 // models/Livre.js
 export class Livre {
-  constructor(id, titre, isbn, nombrePages, anneePublication) {
+  constructor(id, titre, isbn, Nombre_Pages, Annee_Publication) {
     this.id = id;
     this.titre = titre;
     this.isbn = isbn;
-    this.nombrePages = nombrePages;
-    this.anneePublication = anneePublication;
+    this.Nombre_Pages = Nombre_Pages;
+    this.Annee_Publication = Annee_Publication;
   }
 
   // Validation
@@ -20,13 +20,13 @@ export class Livre {
       };
     }
 
-    if (this.nombrePages && isNaN(this.nombrePages)) {
+    if (this.Nombre_Pages && isNaN(this.Nombre_Pages)) {
       return {
         valide: false,
         erreur: "Le nombre de pages doit être un nombre",
       };
     }
-    if (this.anneePublication && isNaN(this.anneePublication)) {
+    if (this.Annee_Publication && isNaN(this.Annee_Publication)) {
       return { valide: false, erreur: "L'année doit être un nombre" };
     }
 

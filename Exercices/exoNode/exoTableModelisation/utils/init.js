@@ -36,7 +36,7 @@ export async function openDb() {
 export async function insertData(db) {
   try {
     await db.run(`
-      INSERT INTO AUTEUR (ID_Auteur, Nom, Prenom, Date_Naissance, Nationalite)
+      INSERT OR IGNORE INTO AUTEUR (ID_Auteur, Nom, Prenom, Date_Naissance, Nationalite)
       VALUES 
         (1, 'Hemingway', 'Ernest', '1899-07-21', 'Américaine'),
         (2, 'Orwell', 'George', '1903-06-25', 'Britannique'),
@@ -47,7 +47,7 @@ export async function insertData(db) {
     `);
 
     await db.run(`
-      INSERT INTO CATEGORIE (ID_Categorie, Nom, Description, Date_Creation, Popularite)
+      INSERT OR IGNORE INTO CATEGORIE (ID_Categorie, Nom, Description, Date_Creation, Popularite)
       VALUES 
         (1, 'Fiction', 'Livres de fiction', '2025-03-06', 'Haute'),
         (2, 'Science', 'Livres scientifiques', '2025-03-06', 'Moyenne'),
@@ -57,7 +57,7 @@ export async function insertData(db) {
     `);
 
     await db.run(`
-      INSERT INTO LIVRE (ID_Livre, Titre, ISBN, Nombre_Pages, Annee_Publication)
+      INSERT OR IGNORE INTO LIVRE (ID_Livre, Titre, ISBN, Nombre_Pages, Annee_Publication)
       VALUES
         (1, 'The Old Man and the Sea', '978-1234567890', 127, 1952),
         (2, '1984', '978-0987654321', 328, 1949),
@@ -74,7 +74,41 @@ export async function insertData(db) {
     `);
 
     await db.run(`
-      INSERT INTO AUTEUR_LIVRE (ID_Auteur, ID_Livre)
+      INSERT OR IGNORE INTO MEMBRE (ID_Membre, Nom, Prenom, Email)
+      VALUES
+        (1, 'John', 'Doe', 'JohnDoe@email.com'),
+        (2, 'Jane', 'Doe', 'JaneDoe@email.com'),
+        (3, 'Bob', 'Smith', 'BobSmith@email.com'),
+        (4, 'Alice', 'Smith', 'AliceSmith@email.com'),
+        (5, 'James', 'Brown', 'JamesBrown@email.com'),
+        (6, 'Sarah', 'Brown', 'SarahBrown@email.com');
+    `);
+    console.log("Insertion des données dans la table EXEMPLAIRE...");
+    await db.run(`
+      INSERT OR IGNORE INTO EXEMPLAIRE (ID_Exemplaire, ID_Livre, Etat, Disponibilite, Rarete, Date_Acquisition)
+      VALUES
+        (1, 1, 'Bon', 1, 1, '2021-01-15'),
+        (2, 2, 'Moyen', 1, 0, '2021-01-15'),
+        (3, 3, 'Mauvais', 1, 1, '2021-01-15'),
+        (4, 4, 'Bon', 0, 1, '2021-01-15'),
+        (5, 5, 'Moyen', 0, 1, '2021-01-15'),
+        (6, 6, 'Mauvais', 1, 1, '2021-01-15'),
+        (7, 7, 'Bon', 0, 1, '2021-01-15'),
+        (8, 8, 'Moyen', 0, 1, '2021-01-15'),
+        (9, 9, 'Mauvais', 1, 1, '2021-01-15'),
+        (10, 10, 'Bon', 0, 1, '2021-01-15'),
+        (11, 11, 'Moyen', 0, 1, '2021-01-15'),
+        (12, 12, 'Mauvais', 1, 1, '2021-01-15');
+    `);
+    console.log("Données insérées dans la table EXEMPLAIRE.");
+    await db.run(`
+      INSERT OR IGNORE INTO EMPRUNT (ID_Emprunt, ID_Exemplaire, ID_Membre, Date_Emprunt, Date_Retour_Prevue)
+      VALUES
+        (1, 1, 1, '2021-02-15', '2021-03-15');
+    `);
+
+    await db.run(`
+      INSERT OR IGNORE INTO AUTEUR_LIVRE (ID_Auteur, ID_Livre)
       VALUES
         (3, 3),
         (3, 4),

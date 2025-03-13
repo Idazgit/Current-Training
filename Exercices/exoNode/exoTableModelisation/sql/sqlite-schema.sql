@@ -1,7 +1,7 @@
 -- Activer les clés étrangères dans SQLite (important)
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE "LIVRE" (
+CREATE TABLE IF NOT EXISTS "LIVRE" (
   "ID_Livre" INTEGER PRIMARY KEY,
   "Titre" TEXT NOT NULL,
   "ISBN" TEXT UNIQUE,
@@ -9,14 +9,14 @@ CREATE TABLE "LIVRE" (
   "Annee_Publication" INTEGER
 );
 
-CREATE TABLE "MEMBRE" (
+CREATE TABLE IF NOT EXISTS "MEMBRE" (
   "ID_Membre" INTEGER PRIMARY KEY,
   "Nom" TEXT NOT NULL,
   "Prenom" TEXT NOT NULL,
   "Email" TEXT UNIQUE
 );
 
-CREATE TABLE "AUTEUR" (
+CREATE TABLE IF NOT EXISTS "AUTEUR" (
   "ID_Auteur" INTEGER PRIMARY KEY,
   "Nom" TEXT NOT NULL,
   "Prenom" TEXT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE "AUTEUR" (
   "Nationalite" TEXT NOT NULL
 );
 
-CREATE TABLE "CATEGORIE" (
+CREATE TABLE IF NOT EXISTS "CATEGORIE" (
   "ID_Categorie" INTEGER PRIMARY KEY,
   "Nom" TEXT NOT NULL,
   "Description" TEXT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE "CATEGORIE" (
   "Popularite" TEXT NOT NULL
 );
 
-CREATE TABLE "EXEMPLAIRE" (
+CREATE TABLE IF NOT EXISTS "EXEMPLAIRE" (
   "ID_Exemplaire" INTEGER PRIMARY KEY,
   "ID_Livre" INTEGER NOT NULL,
   "Etat" TEXT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE "EXEMPLAIRE" (
   CHECK (NOT ("Rarete" = 1 AND "Disponibilite" = 1))
 );
 
-CREATE TABLE "EMPRUNT" (
+CREATE TABLE IF NOT EXISTS "EMPRUNT" (
   "ID_Emprunt" INTEGER PRIMARY KEY,
   "ID_Exemplaire" INTEGER NOT NULL,
   "ID_Membre" INTEGER NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE "EMPRUNT" (
   FOREIGN KEY ("ID_Exemplaire") REFERENCES "EXEMPLAIRE" ("ID_Exemplaire")
 );
 
-CREATE TABLE "AUTEUR_LIVRE" (
+CREATE TABLE IF NOT EXISTS "AUTEUR_LIVRE" (
   "ID_Auteur" INTEGER,
   "ID_Livre" INTEGER,
   PRIMARY KEY ("ID_Auteur", "ID_Livre"),
@@ -61,7 +61,7 @@ CREATE TABLE "AUTEUR_LIVRE" (
   FOREIGN KEY ("ID_Livre") REFERENCES "LIVRE" ("ID_Livre")
 );
 
-CREATE TABLE "CATEGORIE_LIVRE" (
+CREATE TABLE IF NOT EXISTS "CATEGORIE_LIVRE" (
   "ID_Categorie" INTEGER,
   "ID_Livre" INTEGER,
   PRIMARY KEY ("ID_Categorie", "ID_Livre"),
@@ -70,6 +70,16 @@ CREATE TABLE "CATEGORIE_LIVRE" (
 );
 
 -- Création des index
-CREATE INDEX "idx_livre_titre" ON "LIVRE" ("Titre");
-CREATE INDEX "idx_membre_email" ON "MEMBRE" ("Email");
-CREATE INDEX "idx_categorie_nom" ON "CATEGORIE" ("Nom");
+CREATE INDEX IF NOT EXISTS "idx_livre_titre" ON "LIVRE" ("Titre");
+CREATE INDEX IF NOT EXISTS "idx_membre_email" ON "MEMBRE" ("Email");
+CREATE INDEX IF NOT EXISTS "idx_categorie_nom" ON "CATEGORIE" ("Nom");
+
+-- Trigger pour mettre à jour la disponibilité après le retour d'un livre
+CREATE TRIGGER IF NOT EXISTS update_disponibilite_after_return
+AFTER DELETE ON EMPRUNT
+FOR EACH ROW
+BEGIN
+  UPDATE EXEMPLAIRE
+  SET Disponibilite = 1
+  WHERE ID_Exemplaire = OLD.ID_Exemplaire;
+END;
