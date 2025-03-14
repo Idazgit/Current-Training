@@ -12,6 +12,8 @@ export const routes = (req, res) => {
   if (url === "/api/livres" && method === "GET") {
     livreController.getAllLivres(req, res);
   } else if (url === "/api/livres" && method === "POST") {
+    console.log(req.body);
+
     livreController.createLivre(req, res);
   } else if (url.match(/^\/api\/livres\/([0-9]+)$/) && method === "GET") {
     const id = url.split("/")[3];

@@ -28,7 +28,7 @@ export const auteurRepository = {
       INSERT INTO AUTEUR (Nom, Prenom, Date_Naissance, Nationalite)
       VALUES (?, ?, ?, ?)
     `,
-      [auteur.nom, auteur.prenom, auteur.dateNaissance, auteur.nationalite]
+      [auteur.Nom, auteur.Prenom, auteur.Date_Naissance, auteur.Nationalite]
     );
 
     return {
@@ -70,10 +70,10 @@ export const auteurRepository = {
       WHERE ID_Auteur = ?
     `,
       [
-        auteur.nom,
-        auteur.prenom,
-        auteur.dateNaissance,
-        auteur.nationalite,
+        auteur.Nom,
+        auteur.Prenom,
+        auteur.Date_Naissance,
+        auteur.Nationalite,
         auteur.id,
       ]
     );

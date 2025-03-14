@@ -24,7 +24,9 @@ export const livreController = {
    */
   async createLivre(req, res) {
     try {
+      console.log(req.body);
       console.log("Création d'un nouveau livre");
+
       const livreData = await parseRequestBody(req);
 
       const result = await livreService.createLivre(livreData);

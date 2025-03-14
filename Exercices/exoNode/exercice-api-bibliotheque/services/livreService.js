@@ -10,8 +10,8 @@ export const livreService = {
     // Création d'une instance à partir des données brutes
     const nouveauLivre = new Livre(
       null, // ID sera généré par la base de données
-      livreData.titre,
-      livreData.isbn || null,
+      livreData.Titre,
+      livreData.Isbn || null,
       livreData.Nombre_Pages || null,
       livreData.Annee_Publication || null
     );
@@ -34,8 +34,8 @@ export const livreService = {
     // Création d'une instance à partir des données brutes
     const livreMisAJour = new Livre(
       id,
-      livreData.titre,
-      livreData.isbn || null,
+      livreData.Titre,
+      livreData.Isbn || null,
       livreData.Nombre_Pages || null,
       livreData.Annee_Publication || null
     );

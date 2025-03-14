@@ -2,45 +2,45 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import path from "path";
 import { readFile } from "fs/promises";
-import fs from "fs";
 
-console.log(
-  "Chemin de la base de données :",
-  path.resolve("../Data/database.db")
-);
+let dbInstance = null; // Stocke l'instance de la base de données
 
 export async function openDb() {
   try {
-    const dbPath = path.resolve("../Data/database.db");
-
-    // Vérifiez si le répertoire Data existe, sinon créez-le
-    const dataDir = path.dirname(dbPath);
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
+    if (dbInstance) {
+      return dbInstance; // Retourne l'instance déjà ouverte
     }
 
-    const db = await open({
+    const dbPath = path.resolve(
+      "../exercice-api-bibliotheque/Data/database.db"
+    );
+    console.log("Chemin de la base de données :", dbPath);
+
+    dbInstance = await open({
       filename: dbPath,
       driver: sqlite3.Database,
     });
     console.log("Base de données ouverte avec succès !");
 
-    // Lire et exécuter le script SQL pour créer les tables
-    const schema = await readFile(
-      path.resolve("./sql/bibliotheque.sql"),
-      "utf-8"
-    );
-    console.log(
-      "Chemin du fichier SQL : ",
-      path.resolve("./sql/bibliotheque.sql")
+    // Vérifier si la base est vide avant d'exécuter le script SQL
+    const tablesExist = await dbInstance.get(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='LIVRE'"
     );
 
-    await db.exec(schema);
-    console.log("Schéma de la base de données appliqué avec succès !");
+    if (!tablesExist) {
+      console.log("Initialisation de la base de données...");
+      const schema = await readFile(
+        path.resolve("./sql/bibliotheque.sql"),
+        "utf-8"
+      );
+      await dbInstance.exec(schema);
+      await insertData(dbInstance);
+      console.log("Schéma appliqué et données insérées !");
+    } else {
+      console.log("Base de données déjà initialisée.");
+    }
 
-    await insertData(db);
-
-    return db;
+    return dbInstance;
   } catch (error) {
     console.error("Erreur lors de l'ouverture de la base de données", error);
     throw new Error("Failed to open database");
@@ -117,11 +117,10 @@ export async function insertData(db) {
         (12, 12, 'Mauvais', 0, 1, '2021-01-15');  
     `);
     console.log("Données insérées dans la table EXEMPLAIRE.");
-
     await db.run(`
       INSERT OR IGNORE INTO EMPRUNT (ID_Emprunt, ID_Exemplaire, ID_Membre, Date_Emprunt, Date_Retour_Prevue)
       VALUES
-        (1, 2, 1, '2021-01-15', '2021-02-15')
+        (1, 1, 1, '2021-01-15', '2021-02-15')
       
     `);
     console.log("Données insérées dans la table EMPRUNT.");
@@ -139,6 +138,7 @@ export async function insertData(db) {
         (6, 10),
         (3, 11),
         (4, 12);
+        
     `);
 
     console.log("Données insérées avec succès !");

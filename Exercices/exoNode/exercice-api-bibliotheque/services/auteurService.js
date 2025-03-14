@@ -10,10 +10,10 @@ export const auteurService = {
     // Création d'une instance à partir des données brutes
     const nouvelAuteur = new Auteur(
       null, // ID sera généré par la base de données
-      auteurData.nom,
-      auteurData.prenom,
-      auteurData.dateNaissance,
-      auteurData.nationalite
+      auteurData.Nom,
+      auteurData.Prenom,
+      auteurData.Date_Naissance,
+      auteurData.Nationalite
     );
 
     // Validation via la méthode du modèle
@@ -34,10 +34,10 @@ export const auteurService = {
     // Création d'une instance à partir des données brutes
     const auteurMisAJour = new Auteur(
       id,
-      auteurData.nom,
-      auteurData.prenom,
-      auteurData.dateNaissance,
-      auteurData.nationalite
+      auteurData.Nom,
+      auteurData.Prenom,
+      auteurData.Date_Naissance,
+      auteurData.Nationalite
     );
 
     // Validation via la méthode du modèle

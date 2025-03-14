@@ -1,27 +1,25 @@
 export class Auteur {
-  constructor(id, nom, prenom, Date_Naissance, nationalite) {
+  constructor(id, Nom, Prenom, Date_Naissance, Nationalite) {
     this.id = id;
-    this.nom = nom;
-    this.prenom = prenom;
+    this.Nom = Nom;
+    this.Prenom = Prenom;
     this.Date_Naissance = Date_Naissance;
-    this.nationalite = nationalite;
+    this.Nationalite = Nationalite;
   }
 
   // Validation
   estValide() {
-    if (!this.nom || this.nom.trim() === "") {
+    if (!this.Nom || this.Nom.trim() === "") {
       return { valide: false, erreur: "Le Nom est requis" };
     }
-    if (!this.prenom || this.prenom.trim() === "") {
+    if (!this.Prenom || this.Prenom.trim() === "") {
       return { valide: false, erreur: "Le Prénom est requis" };
     }
-    if (!this.Date_Naissance && isNaN(this.Date_Naissance)) {
-      return {
-        valide: false,
-        erreur: "La date de naissance doit être un nombre",
-      };
+
+    if (!this.Date_Naissance || this.Date_Naissance.trim() === "") {
+      return { valide: false, erreur: "La date de naissance est requise" };
     }
-    if (!this.nationalite || this.nationalite.trim() === "") {
+    if (!this.Nationalite || this.Nationalite.trim() === "") {
       return { valide: false, erreur: "La nationalité est requise" };
     }
 

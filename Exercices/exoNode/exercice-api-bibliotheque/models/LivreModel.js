@@ -1,19 +1,19 @@
 // models/Livre.js
 export class Livre {
-  constructor(id, titre, isbn, Nombre_Pages, Annee_Publication) {
+  constructor(id, Titre, ISBN, Nombre_Pages, Annee_Publication) {
     this.id = id;
-    this.titre = titre;
-    this.isbn = isbn;
+    this.Titre = Titre;
+    this.ISBN = ISBN;
     this.Nombre_Pages = Nombre_Pages;
     this.Annee_Publication = Annee_Publication;
   }
 
   // Validation
   estValide() {
-    if (!this.titre || this.titre.trim() === "") {
+    if (!this.Titre || this.Titre.trim() === "") {
       return { valide: false, erreur: "Le titre est requis" };
     }
-    if (!this.isbn || this.isbn.trim() === "" || isNaN(this.isbn)) {
+    if (!this.ISBN || this.ISBN.trim() === "" || isNaN(this.ISBN)) {
       return {
         valide: false,
         erreur: "L'ISBN est requis et doit être un nombre",
