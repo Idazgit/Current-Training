@@ -1,29 +1,56 @@
-// services/livreService.js
 import { auteurRepository } from "../repositories/auteurRepository.js";
 import { Auteur } from "../models/AuteurModel.js";
 
 export const auteurService = {
-  getAllAuteur() {
-    return auteurRepository.findAll();
+  getAllAuteurs() {
+    return auteurRepository.findAllAuteurs();
   },
 
   createAuteur(auteurData) {
     // Création d'une instance à partir des données brutes
-    const nouveauAuteur = new Auteur(
+    const nouvelAuteur = new Auteur(
       null, // ID sera généré par la base de données
       auteurData.nom,
       auteurData.prenom,
-      auteurData.dateNaissance || null,
-      auteurData.nationalite || null
+      auteurData.dateNaissance,
+      auteurData.nationalite
     );
 
     // Validation via la méthode du modèle
-    const validation = nouveauAuteur.estValide();
+    const validation = nouvelAuteur.estValide();
     if (!validation.valide) {
       throw new Error(validation.erreur);
     }
 
     // Sauvegarde via repository
-    return auteurRepository.create(nouveauAuteur);
+    return auteurRepository.create(nouvelAuteur);
+  },
+
+  getAuteurById(id) {
+    return auteurRepository.findById(id);
+  },
+
+  updateAuteur(id, auteurData) {
+    // Création d'une instance à partir des données brutes
+    const auteurMisAJour = new Auteur(
+      id,
+      auteurData.nom,
+      auteurData.prenom,
+      auteurData.dateNaissance,
+      auteurData.nationalite
+    );
+
+    // Validation via la méthode du modèle
+    const validation = auteurMisAJour.estValide();
+    if (!validation.valide) {
+      throw new Error(validation.erreur);
+    }
+
+    // Mise à jour via repository
+    return auteurRepository.update(auteurMisAJour);
+  },
+
+  deleteAuteur(id) {
+    return auteurRepository.delete(id);
   },
 };

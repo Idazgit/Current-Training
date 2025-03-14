@@ -2,6 +2,7 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import path from "path";
 import { readFile } from "fs/promises";
+import fs from "fs";
 
 console.log(
   "Chemin de la base de données :",
@@ -10,8 +11,16 @@ console.log(
 
 export async function openDb() {
   try {
+    const dbPath = path.resolve("../Data/database.db");
+
+    // Vérifiez si le répertoire Data existe, sinon créez-le
+    const dataDir = path.dirname(dbPath);
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+
     const db = await open({
-      filename: path.resolve("../Data/database.db"),
+      filename: dbPath,
       driver: sqlite3.Database,
     });
     console.log("Base de données ouverte avec succès !");
@@ -94,25 +103,28 @@ export async function insertData(db) {
     await db.run(`
       INSERT OR IGNORE INTO EXEMPLAIRE (ID_Exemplaire, ID_Livre, Etat, Disponibilite, Rarete, Date_Acquisition)
       VALUES
-        (1, 1, 'Bon', 1, 1, '2021-01-15'),
+        (1, 1, 'Bon', 0, 1, '2021-01-15'),  
         (2, 2, 'Moyen', 1, 0, '2021-01-15'),
-        (3, 3, 'Mauvais', 1, 1, '2021-01-15'),
+        (3, 3, 'Mauvais', 0, 1, '2021-01-15'),  
         (4, 4, 'Bon', 0, 1, '2021-01-15'),
         (5, 5, 'Moyen', 0, 1, '2021-01-15'),
-        (6, 6, 'Mauvais', 1, 1, '2021-01-15'),
+        (6, 6, 'Mauvais', 0, 1, '2021-01-15'),  
         (7, 7, 'Bon', 0, 1, '2021-01-15'),
         (8, 8, 'Moyen', 0, 1, '2021-01-15'),
-        (9, 9, 'Mauvais', 1, 1, '2021-01-15'),
+        (9, 9, 'Mauvais', 0, 1, '2021-01-15'),  
         (10, 10, 'Bon', 0, 1, '2021-01-15'),
         (11, 11, 'Moyen', 0, 1, '2021-01-15'),
-        (12, 12, 'Mauvais', 1, 1, '2021-01-15');
+        (12, 12, 'Mauvais', 0, 1, '2021-01-15');  
     `);
     console.log("Données insérées dans la table EXEMPLAIRE.");
+
     await db.run(`
       INSERT OR IGNORE INTO EMPRUNT (ID_Emprunt, ID_Exemplaire, ID_Membre, Date_Emprunt, Date_Retour_Prevue)
       VALUES
-        (1, 1, 1, '2021-02-15', '2021-03-15');
+        (1, 2, 1, '2021-01-15', '2021-02-15')
+      
     `);
+    console.log("Données insérées dans la table EMPRUNT.");
 
     await db.run(`
       INSERT OR IGNORE INTO AUTEUR_LIVRE (ID_Auteur, ID_Livre)

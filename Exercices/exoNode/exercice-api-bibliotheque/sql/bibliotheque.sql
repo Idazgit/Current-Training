@@ -1,4 +1,4 @@
-- Activer les clés étrangères dans SQLite (important)
+-- Activer les clés étrangères dans SQLite (important)
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS "LIVRE" (
