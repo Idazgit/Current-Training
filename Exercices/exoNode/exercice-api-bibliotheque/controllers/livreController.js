@@ -5,10 +5,10 @@ export const livreController = {
   /**
    * Récupère tous les livres
    */
-  async getAllLivres(req, res) {
+  async getAllLivres(req, res, page, limit) {
     try {
       console.log("Récupération de tous les livres");
-      const livres = await livreService.getAllLivres();
+      const livres = await livreService.getAllLivres(page, limit);
 
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: livres }));
@@ -74,6 +74,64 @@ export const livreController = {
     }
   },
 
+  async getLivreByCategorie(req, res, id, page, limit) {
+    try {
+      console.log(`Récupération des livres de la catégorie avec ID ${id}`);
+      const result = await livreService.getLivreByCategorie(id, page, limit);
+
+      if (!result) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({ success: false, error: "Catégorie non trouvée" })
+        );
+        return;
+      }
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          success: true,
+          categorie: result.categorieNom,
+          data: result.livres,
+        })
+      );
+    } catch (error) {
+      console.error(
+        `Erreur lors de la récupération des livres de la catégorie avec ID ${id} :`,
+        error
+      );
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, error: "Erreur serveur" }));
+    }
+  },
+  async getLivreByAuteur(req, res, id, page, limit) {
+    try {
+      console.log(`Récupération des livres de l'auteur avec ID ${id}`);
+      const result = await livreService.getLivreByAuteur(id, page, limit);
+
+      if (!result) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, error: "Auteur non trouvé" }));
+        return;
+      }
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          success: true,
+          auteur: result.auteurNom,
+          data: result.livres,
+        })
+      );
+    } catch (error) {
+      console.error(
+        `Erreur lors de la récupération des livres de l'auteur avec ID ${id} :`,
+        error
+      );
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, error: "Erreur serveur" }));
+    }
+  },
   /**
    * Met à jour un livre
    */

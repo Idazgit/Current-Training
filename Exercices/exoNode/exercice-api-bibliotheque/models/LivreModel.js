@@ -13,11 +13,9 @@ export class Livre {
     if (!this.Titre || this.Titre.trim() === "") {
       return { valide: false, erreur: "Le titre est requis" };
     }
-    if (!this.ISBN || this.ISBN.trim() === "" || isNaN(this.ISBN)) {
-      return {
-        valide: false,
-        erreur: "L'ISBN est requis et doit être un nombre",
-      };
+
+    if (!this.ISBN && isNaN(this.ISBN)) {
+      return { valide: false, erreur: "L'ISBN doit être un nombre" };
     }
 
     if (this.Nombre_Pages && isNaN(this.Nombre_Pages)) {

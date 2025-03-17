@@ -14,13 +14,11 @@ export async function openDb() {
     const dbPath = path.resolve(
       "../exercice-api-bibliotheque/Data/database.db"
     );
-    console.log("Chemin de la base de données :", dbPath);
 
     dbInstance = await open({
       filename: dbPath,
       driver: sqlite3.Database,
     });
-    console.log("Base de données ouverte avec succès !");
 
     // Vérifier si la base est vide avant d'exécuter le script SQL
     const tablesExist = await dbInstance.get(
@@ -37,7 +35,6 @@ export async function openDb() {
       await insertData(dbInstance);
       console.log("Schéma appliqué et données insérées !");
     } else {
-      console.log("Base de données déjà initialisée.");
     }
 
     return dbInstance;

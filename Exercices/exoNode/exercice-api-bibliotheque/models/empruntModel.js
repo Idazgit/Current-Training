@@ -15,20 +15,23 @@ export class Emprunt {
 
   // Validation
   estValide() {
-    if (!this.nom || this.nom.trim() === "") {
-      return { valide: false, erreur: "Le Nom est requis" };
+    if (!this.ID_Exemplaire && isNaN(this.ID_Exemplaire)) {
+      return { valide: false, erreur: "L'ID Exemplaire doit être un nombre" };
     }
-    if (!this.prenom || this.prenom.trim() === "") {
-      return { valide: false, erreur: "Le Prénom est requis" };
+    if (!this.ID_Membre && isNaN(this.ID_Membre)) {
+      return { valide: false, erreur: "L'ID Membre doit être un nombre" };
     }
-    if (!this.dateNaissance && isNaN(this.dateNaissance)) {
+    if (!this.Date_Emprunt && isNaN(this.Date_Emprunt)) {
       return {
         valide: false,
-        erreur: "La date de naissance doit être un nombre",
+        erreur: "La date d'emprunt doit être un nombre",
       };
     }
-    if (!this.nationalite || this.nationalite.trim() === "") {
-      return { valide: false, erreur: "La nationalité est requise" };
+    if (!this.Date_Retour_Prevue && isNaN(this.Date_Retour_Prevue)) {
+      return {
+        valide: false,
+        erreur: "La date de retour prévue doit être un nombre",
+      };
     }
 
     return { valide: true };

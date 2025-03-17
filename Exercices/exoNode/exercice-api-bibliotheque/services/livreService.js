@@ -2,8 +2,9 @@ import { livreRepository } from "../repositories/livreRepository.js";
 import { Livre } from "../models/LivreModel.js";
 
 export const livreService = {
-  getAllLivres() {
-    return livreRepository.findAll();
+  getAllLivres(page, limit) {
+    const offset = (page - 1) * limit;
+    return livreRepository.findAll(offset, limit);
   },
 
   createLivre(livreData) {
@@ -11,7 +12,7 @@ export const livreService = {
     const nouveauLivre = new Livre(
       null, // ID sera généré par la base de données
       livreData.Titre,
-      livreData.Isbn || null,
+      livreData.ISBN || null,
       livreData.Nombre_Pages || null,
       livreData.Annee_Publication || null
     );
@@ -30,12 +31,21 @@ export const livreService = {
     return livreRepository.findById(id);
   },
 
+  getLivreByCategorie(id, page, limit) {
+    const offset = (page - 1) * limit;
+
+    return livreRepository.findByCategorie(id, offset, limit);
+  },
+  getLivreByAuteur(id, page, limit) {
+    const offset = (page - 1) * limit;
+    return livreRepository.findByAuteur(id, offset, limit);
+  },
   updateLivre(id, livreData) {
     // Création d'une instance à partir des données brutes
     const livreMisAJour = new Livre(
       id,
       livreData.Titre,
-      livreData.Isbn || null,
+      livreData.ISBN || null,
       livreData.Nombre_Pages || null,
       livreData.Annee_Publication || null
     );
