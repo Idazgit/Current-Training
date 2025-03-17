@@ -12,6 +12,7 @@ export const livreController = {
 
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: livres }));
+      console.log(`Fetching books with page=${page} and limit=${limit}`);
     } catch (error) {
       console.error("Erreur lors de la récupération des livres :", error);
       res.writeHead(500, { "Content-Type": "application/json" });
@@ -74,10 +75,10 @@ export const livreController = {
     }
   },
 
-  async getLivreByCategorie(req, res, id, page, limit) {
+  async getLivreByCategorie(req, res, id) {
     try {
       console.log(`Récupération des livres de la catégorie avec ID ${id}`);
-      const result = await livreService.getLivreByCategorie(id, page, limit);
+      const result = await livreService.getLivreByCategorie(id);
 
       if (!result) {
         res.writeHead(404, { "Content-Type": "application/json" });
@@ -104,10 +105,10 @@ export const livreController = {
       res.end(JSON.stringify({ success: false, error: "Erreur serveur" }));
     }
   },
-  async getLivreByAuteur(req, res, id, page, limit) {
+  async getLivreByAuteur(req, res, id) {
     try {
       console.log(`Récupération des livres de l'auteur avec ID ${id}`);
-      const result = await livreService.getLivreByAuteur(id, page, limit);
+      const result = await livreService.getLivreByAuteur(id);
 
       if (!result) {
         res.writeHead(404, { "Content-Type": "application/json" });

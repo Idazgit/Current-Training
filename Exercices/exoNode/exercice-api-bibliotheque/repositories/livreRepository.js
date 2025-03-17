@@ -6,6 +6,7 @@ let dbPromise = openDb(); // 📌 Charge la base de données une seule fois
 export const livreRepository = {
   async findAll(offset, limit) {
     const db = await dbPromise;
+
     const stmt = await db.prepare(`
       SELECT ID_Livre, Titre, ISBN, Nombre_Pages, Annee_Publication
       FROM LIVRE
@@ -24,7 +25,6 @@ export const livreRepository = {
         )
     );
   },
-
   async create(livre) {
     const db = await dbPromise;
     const stmt = await db.prepare(`
@@ -64,7 +64,7 @@ export const livreRepository = {
       row.Annee_Publication
     );
   },
-  async findByCategorie(id, offset, limit) {
+  async findByCategorie(id) {
     const db = await dbPromise;
     try {
       // Version simplifiée sans pagination
@@ -99,7 +99,7 @@ export const livreRepository = {
       throw error;
     }
   },
-  async findByAuteur(id, limit, offset) {
+  async findByAuteur(id) {
     const db = await dbPromise;
     const stmt = await db.prepare(`
       SELECT a.Nom AS AUTEUR, l.* 
@@ -107,10 +107,10 @@ export const livreRepository = {
       JOIN AUTEUR_LIVRE al ON l.ID_Livre = al.ID_Livre
       JOIN AUTEUR a ON al.ID_Auteur = a.ID_Auteur
       WHERE al.ID_Auteur = ?
-      LIMIT ? OFFSET ?
+      
     `);
 
-    const rows = await stmt.all(id, limit, offset);
+    const rows = await stmt.all(id);
     if (!rows || rows.length === 0) return null;
 
     const auteurNom = rows[0].AUTEUR;

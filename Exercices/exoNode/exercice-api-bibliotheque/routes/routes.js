@@ -8,13 +8,15 @@ export const routes = (req, res) => {
   const url = req.url;
   const method = req.method;
   const queryParams = new URLSearchParams(url.split("?")[1]);
-
+  // URL par défaut http://localhost:3000/api/livres?page=2&limit=2
   // Routes pour les livres
   if (url.startsWith("/api/livres") && method === "GET") {
     const page = parseInt(queryParams.get("page")) || 1;
     const limit = parseInt(queryParams.get("limit")) || 10;
+    console.log(page, limit);
+    console.log(url);
 
-    if (url === "/api/livres") {
+    if (url.startsWith("/api/livres")) {
       livreController.getAllLivres(req, res, page, limit);
     } else if (url.match(/^\/api\/livres\/([0-9]+)$/)) {
       const id = url.split("/")[3];
@@ -22,10 +24,10 @@ export const routes = (req, res) => {
       //Routes pour les Livres par Catégorie
     } else if (url.match(/^\/api\/livres\/categorie\/([0-9]+)$/)) {
       const id = url.split("/")[4];
-      livreController.getLivreByCategorie(req, res, parseInt(id), page, limit);
+      livreController.getLivreByCategorie(req, res, parseInt(id));
     } else if (url.match(/^\/api\/livres\/auteur\/([0-9]+)$/)) {
       const id = url.split("/")[4];
-      livreController.getLivreByAuteur(req, res, parseInt(id), page, limit);
+      livreController.getLivreByAuteur(req, res, parseInt(id));
     }
   } else if (url === "/api/livres" && method === "POST") {
     console.log(req.body);
@@ -77,3 +79,5 @@ export const routes = (req, res) => {
     res.end(JSON.stringify({ success: false, error: "Route non trouvée" }));
   }
 };
+
+// Compare this snippet from app.js:

@@ -5,6 +5,20 @@ export const empruntService = {
   getAllEmprunts() {
     return empruntRepository.findAllEmprunts();
   },
+  async createEmprunt(empruntData) {
+    // Vérifie combien d'exemplaires sont disponibles
+    const nbExemplairesDispo =
+      await empruntRepository.countExemplairesDisponibles(empruntData.ID_Livre);
+
+    if (nbExemplairesDispo < 3) {
+      throw new Error(
+        "Ce livre ne peut pas être emprunté : moins de 3 exemplaires sont disponibles."
+      );
+    }
+
+    // Si assez d'exemplaires, on enregistre l'emprunt
+    return empruntRepository.create(empruntData);
+  },
 
   createEmprunt(empruntData) {
     // Création d'une instance à partir des données brutes

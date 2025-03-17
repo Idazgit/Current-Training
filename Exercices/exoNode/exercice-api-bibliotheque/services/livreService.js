@@ -31,14 +31,11 @@ export const livreService = {
     return livreRepository.findById(id);
   },
 
-  getLivreByCategorie(id, page, limit) {
-    const offset = (page - 1) * limit;
-
-    return livreRepository.findByCategorie(id, offset, limit);
+  getLivreByCategorie(id) {
+    return livreRepository.findByCategorie(id);
   },
-  getLivreByAuteur(id, page, limit) {
-    const offset = (page - 1) * limit;
-    return livreRepository.findByAuteur(id, offset, limit);
+  getLivreByAuteur(id) {
+    return livreRepository.findByAuteur(id);
   },
   updateLivre(id, livreData) {
     // Création d'une instance à partir des données brutes
