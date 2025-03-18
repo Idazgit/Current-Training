@@ -105,9 +105,9 @@ export const empruntRepository = {
   async countExemplairesDisponibles(idLivre) {
     const db = await openDb();
     const stmt = await db.prepare(`
-        SELECT COUNT(*) AS total 
-        FROM EXEMPLAIRE 
-        WHERE ID_Livre = ? AND est_disponible = 1
+      SELECT COUNT(*) AS total 
+      FROM EXEMPLAIRE 
+      WHERE ID_Livre = ? AND Disponibilite = 1
     `);
     const row = await stmt.get(idLivre);
     return row.total;
